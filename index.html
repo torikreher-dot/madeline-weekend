@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Madeline's Austin Birthday Weekend</title>
+<style>
+  :root{--sun:#ff8a3d;--pink:#ff5c8a;--teal:#1fb5a8;--ink:#2b2140;--cream:#fff8ef;--line:#eadccc;--muted:#6b5d7b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:linear-gradient(160deg,#ffd29d 0%,#ff9a8b 45%,#c38df5 100%);min-height:100vh;color:var(--ink);display:flex;justify-content:center;padding:24px 14px}
+  .card{background:var(--cream);width:100%;max-width:580px;border-radius:24px;box-shadow:0 20px 50px rgba(60,20,80,.25);padding:26px 22px;position:relative}
+  .top{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+  .progress{flex:1;height:8px;background:#f0e2d3;border-radius:99px;overflow:hidden}
+  .bar{height:100%;width:0;background:linear-gradient(90deg,var(--sun),var(--pink));transition:width .4s}
+  .day{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--pink);white-space:nowrap}
+  .step{display:none;animation:pop .4s ease}
+  .step.active{display:block}
+  @keyframes pop{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  h1{font-size:30px;line-height:1.15;margin-bottom:10px}
+  h2{font-size:22px;margin-bottom:6px}
+  h4{font-size:15px;margin:20px 0 8px}
+  p.sub{color:var(--muted);margin-bottom:16px;font-size:15px;line-height:1.45}
+  .big-emoji{font-size:54px;display:block;margin-bottom:8px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
+  .grid.one{grid-template-columns:1fr}
+  .opt{border:2px solid var(--line);background:#fff;border-radius:16px;padding:13px 12px;cursor:pointer;text-align:left;font-size:14px;transition:all .15s;position:relative;color:var(--ink);font-family:inherit}
+  .opt:hover{transform:translateY(-2px);border-color:var(--sun)}
+  .opt .e{font-size:25px;display:block;margin-bottom:4px}
+  .opt b{display:block;font-size:15px;margin-bottom:2px;padding-right:24px}
+  .opt small{color:#7a6c88;font-size:12.5px;line-height:1.35;display:block}
+  .opt.sel{border-color:var(--pink);background:#fff0f4;box-shadow:0 0 0 3px rgba(255,92,138,.2)}
+  .opt.sel::after{content:"✓";position:absolute;top:8px;right:10px;background:var(--pink);color:#fff;width:22px;height:22px;border-radius:50%;font-size:13px;display:flex;align-items:center;justify-content:center}
+  .count{font-size:13px;color:var(--muted);margin-bottom:10px;font-weight:600}
+  textarea{width:100%;padding:13px;border-radius:14px;border:2px solid var(--line);font-size:16px;font-family:inherit;margin-bottom:16px;background:#fff}
+  textarea:focus{outline:none;border-color:var(--sun)}
+  label.lbl{font-weight:700;font-size:14px;display:block;margin-bottom:6px}
+  .btns{display:flex;gap:10px;margin-top:18px}
+  button.nav{flex:1;padding:14px;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit}
+  button.nav:active{transform:scale(.97)}
+  .next{background:linear-gradient(90deg,var(--sun),var(--pink));color:#fff}
+  .back{background:#efe4d8;color:var(--ink);flex:0 0 80px !important}
+  .vs{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch}
+  .vs .opt{text-align:center;padding:18px 10px}
+  .vs .opt .e{font-size:40px}
+  .vs .opt b{padding-right:0}
+  .vs .mid{align-self:center;font-weight:900;color:var(--pink);font-size:18px}
+  /* showdown */
+  .round{text-align:center;font-size:13px;color:var(--muted);margin-bottom:10px}
+  .fighter{border:2px solid var(--line);background:#fff;border-radius:18px;padding:14px 14px;display:flex;align-items:center;gap:12px;transition:all .2s}
+  .fighter.champ{border-color:var(--sun);background:#fff6ea}
+  .fighter .e{font-size:30px}
+  .fighter .info{flex:1}
+  .fighter b{font-size:17px;display:block}
+  .fighter small{color:#7a6c88;font-size:13px;line-height:1.35;display:block}
+  .fighter a{font-size:13px;color:var(--pink);font-weight:600;text-decoration:none;display:inline-block;margin-top:5px}
+  .fighter a:hover{text-decoration:underline}
+  .crown{font-size:11px;font-weight:800;color:var(--sun);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:2px}
+  .pick{background:linear-gradient(90deg,var(--sun),var(--pink));color:#fff;border:none;border-radius:12px;padding:10px 14px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit}
+  .pick:active{transform:scale(.95)}
+  .vsline{text-align:center;font-weight:900;color:var(--pink);font-size:15px;margin:8px 0}
+  .winner{text-align:center;padding:22px 14px;background:#fff;border-radius:18px;border:2px dashed var(--sun)}
+  .winner .e{font-size:48px}
+  .winner a{font-size:14px;color:var(--pink);font-weight:600;text-decoration:none}
+  .linkbtn{background:none;border:none;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:13px;font-family:inherit;display:block;margin:12px auto 0}
+  .slider-wrap{margin:6px 0 10px;text-align:center}
+  input[type=range]{width:100%;accent-color:var(--pink)}
+  .slider-label{font-size:42px;margin-bottom:2px}
+  .slider-text{font-weight:700;font-size:16px;min-height:22px}
+  .ends{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:4px}
+  .info{background:#fff;border-radius:16px;padding:14px;border:2px solid var(--line);font-size:14.5px;line-height:1.5}
+  .info b{color:var(--pink)}
+  .summary{background:#fff;border-radius:16px;padding:16px;margin-bottom:16px;font-size:14.5px;line-height:1.55;border:2px dashed var(--line)}
+  .summary h3{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--pink);margin:12px 0 3px}
+  .summary h3:first-child{margin-top:0}
+  .share{display:flex;flex-direction:column;gap:10px}
+  .share button{padding:14px;border-radius:14px;font-weight:700;font-size:16px;border:none;cursor:pointer;font-family:inherit}
+  .sms{background:var(--teal);color:#fff}
+  .mail{background:var(--ink);color:#fff}
+  .copy{background:#efe4d8;color:var(--ink)}
+  .status{font-size:13px;color:var(--muted);text-align:center;min-height:18px;margin-top:8px}
+  .confetti{position:fixed;top:-20px;font-size:22px;pointer-events:none;animation:fall linear forwards;z-index:9}
+  @keyframes fall{to{transform:translateY(110vh) rotate(540deg);opacity:.7}}
+  @media(max-width:430px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="top"><div class="progress"><div class="bar" id="bar"></div></div><div class="day" id="dayTag">Dec 4–6</div></div>
+
+  <!-- Intro -->
+  <section class="step active" data-day="Dec 4–6">
+    <span class="big-emoji">🎂🤠🌮</span>
+    <h1>Madeline's Austin birthday weekend</h1>
+    <p class="sub">The weekend's mostly planned, but a few things are up to you. Tap through, then send your answers back to me at the end. Takes about 3 minutes.</p>
+    <div class="btns"><button class="nav next" onclick="next()">Let's plan →</button></div>
+  </section>
+
+  <!-- Friday in/out -->
+  <section class="step" data-day="Friday">
+    <h2>Friday night 🌙</h2>
+    <p class="sub">First night in town. Where do you want to eat?</p>
+    <div class="grid one" data-key="friIn" data-max="1">
+      <button class="opt"><span class="e">🕯️</span><b>Home-cooked dinner at my apartment</b><small>Outside on the patio if the weather's nice</small></button>
+      <button class="opt"><span class="e">✨</span><b>Go out</b><small>Dinner, then a drink somewhere nearby</small></button>
+      <button class="opt"><span class="e">🌦️</span><b>Let the weather decide</b><small>Nice out, we stay in. Chilly, we go out.</small></button>
+    </div>
+    <div class="btns"><button class="nav back" onclick="prev()">←</button><button class="nav next" onclick="next()">Next →</button></div>
+  </section>
+
+  <!-- Friday vibes -->
+  <section class="step" data-day="Friday">
+    <h2>If we go out, what's the vibe? ✨</h2>
+    <p class="sub">No research needed. Pick up to three and I'll handle the rest.</p>
+    <div class="count" id="punchCount">0 of 3 picked</div>
+    <div class="grid" data-key="punch" data-max="3">
+      <button class="opt" data-plan="Siti → Nickel City"><span class="e">🌶️</span><b>Southeast Asian night</b><small>Shareable plates, then a laid-back East Side bar</small></button>
+      <button class="opt" data-plan="Paggi House → Nido"><span class="e">🌅</span><b>Views all night</b><small>Drinks by the lake, then dinner on a rooftop</small></button>
+      <button class="opt" data-plan="Bar Grotta or Jupiter Supper Club → Driskill Grill → The Victorian"><span class="e">🎩</span><b>Old-school glam</b><small>Cocktails, a classic steakhouse, and a historic hotel bar</small></button>
+      <button class="opt" data-plan="Teddy's → Este or Bar Toti"><span class="e">🦐</span><b>Mexican seafood</b><small>East Side, lively, lots of sharing plates</small></button>
+      <button class="opt" data-plan="Powder Room → La Piscina → The Proper"><span class="e">🏊‍♀️</span><b>Poolside downtown</b><small>Ceviche and fajitas by a hotel pool, with cocktails before and after</small></button>
+      <button class="opt" data-plan="Ramen del Barrio"><span class="e">🍜</span><b>Ramen with a twist</b><small>Mexican-Japanese ramen, casual and cozy</small></button>
+      <button class="opt" data-plan="Kiin Di"><span class="e">🔥</span><b>Spicy Thai</b><small>Crab curry, noodles, and famous wings on South Lamar</small></button>
+      <button class="opt" data-plan="Birdie's"><span class="e">🍷</span><b>Wine bar dinner</b><small>Laid-back, seasonal menu, great wine list</small></button>
+      <button class="opt" data-plan="Nixta Taqueria"><span class="e">🌮</span><b>Next-level tacos</b><small>A Michelin-starred taqueria on the East Side</small></button>
+    </div>
+    <h4>After dinner?</h4>
+    <div class="grid" data-key="nightcap" data-max="1">
+      <button class="opt"><span class="e">🥃</span><b>One more drink</b></button>
+      <button class="opt"><span class="e">😴</span><b>Bed, big day tomorrow</b></button>
+    </div>
+    <div class="btns"><button class="nav back" onclick="prev()">←</button><button class="nav next" onclick="next()">Next →</button></div>
+  </section>
+
+  <!-- Saturday ride -->
+  <section class="step" data-day="Saturday">
+    <h2>Saturday morning ride 🚴‍♀️</h2>
+    <p class="sub">What kind of ride sounds good?</p>
+    <div class="grid" data-key="bike" data-max="1">
+      <button class="opt"><span class="e">🛣️</span><b>Long</b><small>More miles, steady pace</small></button>
+      <button class="opt"><span class="e">⛰️</span><b>Hilly</b><small>Shorter, with some climbs</small></button>
+      <button class="opt"><span class="e">🔥</span><b>Both</b><small>Long and hilly</small></button>
+    </div>
+    <h4>Lunch after: tacos or burgers?</h4>
+    <div class="vs" data-key="lunch" data-max="1">
+      <button class="opt"><span class="e">🌮</span><b>Tacos</b></button>
+      <div class="mid">VS</div>
+      <button class="opt"><span class="e">🍔</span><b>Burgers</b></button>
+    </div>
+    <div class="btns"><button class="nav back" onclick="prev()">←</button><button class="nav next" onclick="next()">Next →</button></div>
+  </section>
+
+  <!-- Nap -->
+  <section class="step" data-day="Saturday">
+    <h2>Saturday afternoon 😴</h2>
+    <p class="sub">There's a big night ahead. Want me to build in a nap?</p>
+    <div class="slider-wrap">
+      <div class="slider-label" id="napEmoji"></div>
+      <div class="slider-text" id="napText"></div><br>
+      <input type="range" id="nap" min="1" max="5" value="3" oninput="setSlider('nap')">
+      <div class="ends"><span>No nap</span><span>Full nap</span></div>
+    </div>
+    <div class="btns"><button class="nav back" onclick="prev()">←</button><button class="nav next" onclick="next()">Next →</button></div>
+  </section>
+
+  <!-- Showdown -->
+  <section class="step" data-day="Saturday">
+    <h2>Birthday dinner showdown 🏆</h2>
+    <p class="sub">Two at a time. Pick the one you'd rather go to, and the winner faces the next restaurant. Tap a link to look one up first.</p>
+    <div id="showdown"></div>
+    <div class="btns"><button class="nav back" onclick="prev()">←</button><button class="nav next" onclick="next()">Next →</button></div>
+  </section>
+
+  <!-- Rainey -->
+  <section class="step" data-day="Saturday">
+    <h2>Rainey Street bar crawl 🍸</h2>
+    <p class="sub">A few of my friends are coming out with us. How late do you want to go?</p>
+    <div class="slider-wrap">
+      <div class="slider-label" id="lateEmoji"></div>
+      <div class="slider-text" id="lateText"></div><br>
+      <input type="range" id="late" min="1" max="5" value="3" oninput="setSlider('late')">
+      <div class="ends"><span>Early night</span><span>Close it down</span></div>
+    </div>
+    <div class="btns"><button class="nav back" onclick="prev()">←</button><button class="nav next" onclick="next()">Next →</button></div>
+  </section>
+
+  <!-- Sunday -->
+  <section class="step" data-day="Sunday">
+    <h2>Sunday: wine class 🍷</h2>
+    <div class="info">📚 <b>WSET Level 1</b>, 9:30 to 1:30. This one's booked.</div>
+    <h4>After class, what sounds good?</h4>
+    <div class="grid" data-key="sunday">
+      <button class="opt"><span class="e">🥗</span><b>Big lunch</b></button>
+      <button class="opt"><span class="e">🛋️</span><b>Downtime</b></button>
+      <button class="opt"><span class="e">🛍️</span><b>Walk around & shop</b></button>
+      <button class="opt"><span class="e">✈️</span><b>Heading home</b></button>
+    </div>
+    <div class="btns"><button class="nav back" onclick="prev()">←</button><button class="nav next" onclick="next()">Next →</button></div>
+  </section>
+
+  <!-- Spa -->
+  <section class="step" data-day="Treat yourself">
+    <h2>Treat yourself 💆‍♀️</h2>
+    <p class="sub">Want me to book anything while you're here? Pick any, or none.</p>
+    <div class="grid" data-key="spa">
+      <button class="opt"><span class="e">💆‍♀️</span><b>Massage</b></button>
+      <button class="opt"><span class="e">🧖‍♀️</span><b>Facial</b></button>
+      <button class="opt"><span class="e">✨</span><b>BBL + Moxi</b></button>
+      <button class="opt"><span class="e">🙅‍♀️</span><b>I'm good</b></button>
+    </div>
+    <div class="btns"><button class="nav back" onclick="prev()">←</button><button class="nav next" onclick="next()">Next →</button></div>
+  </section>
+
+  <!-- Open -->
+  <section class="step" data-day="Last thing">
+    <h2>Anything else? 💭</h2>
+    <label class="lbl">Anything else you want to do while you're in Austin?</label>
+    <textarea id="other" rows="3"></textarea>
+    <label class="lbl">Anything Nick and Peter want to do? 🍺</label>
+    <textarea id="guys" rows="3"></textarea>
+    <div class="btns"><button class="nav back" onclick="prev()">←</button><button class="nav next" onclick="next()">See my weekend 🎉</button></div>
+  </section>
+
+  <!-- Results -->
+  <section class="step" data-day="Done">
+    <span class="big-emoji">🎉</span>
+    <h2>Madeline's weekend</h2>
+    <p class="sub">Last step: send this to me and I'll take it from here.</p>
+    <div class="summary" id="summary"></div>
+    <div class="share">
+      <button class="sms" onclick="sendText()">💬 Text it to Tori</button>
+      <button class="mail" onclick="sendEmail()">✉️ Email it instead</button>
+      <button class="copy" onclick="copyIt()">📋 Copy answers</button>
+    </div>
+    <div class="status" id="status"></div>
+    <div class="btns"><button class="nav back" style="flex:1 !important" onclick="prev()">← Edit answers</button></div>
+  </section>
+</div>
+
+<script>
+  // Optional: add Tori's number / email so texts and emails go straight to her
+  const TORI_PHONE = "+18139439575";
+  const TORI_EMAIL = "";   // e.g. "tori@example.com"
+
+  const steps=[...document.querySelectorAll('.step')];
+  let cur=0;
+
+  const sliders={
+    nap:{1:["⚡","No nap, keep it moving"],2:["☕","Coffee instead of a nap"],3:["🛋️","Some couch time"],4:["😴","A real nap"],5:["🛌","Long nap, blackout curtains"]},
+    late:{1:["🌙","A couple drinks, home by 10"],2:["🍸","Home around midnight"],3:["💃","See where the night goes"],4:["🪩","Close down at least one bar"],5:["🍕","Late-night pizza at 2am"]}
+  };
+  function setSlider(id){const v=document.getElementById(id).value;document.getElementById(id+'Emoji').textContent=sliders[id][v][0];document.getElementById(id+'Text').textContent=sliders[id][v][1];}
+  setSlider('nap');setSlider('late');
+  const sl=id=>{const v=document.getElementById(id).value;return [sliders[id][v][0]+" "+sliders[id][v][1]];};
+
+  document.querySelectorAll('[data-key]').forEach(g=>{
+    const max=parseInt(g.dataset.max||"99");
+    g.querySelectorAll('.opt').forEach(o=>o.addEventListener('click',()=>{
+      if(!o.classList.contains('sel')&&g.querySelectorAll('.sel').length>=max){
+        if(max===1){g.querySelector('.sel').classList.remove('sel');}
+        else{limitMsg(g);return;}
+      }
+      o.classList.toggle('sel');
+      if(g.dataset.key==='punch')updateCount(g);
+    }));
+  });
+  function updateCount(g){const c=document.getElementById('punchCount');c.style.color="";c.textContent=g.querySelectorAll('.sel').length+" of 3 picked";}
+  function limitMsg(g){const c=document.getElementById('punchCount');c.textContent="Three max! Tap one to swap it out.";c.style.color="#ff5c8a";setTimeout(()=>updateCount(g),1800);}
+
+  function picks(key,withPlan){
+    return [...document.querySelectorAll(`[data-key="${key}"] .opt.sel`)].map(o=>{
+      const e=o.querySelector('.e');const b=o.querySelector('b').textContent;
+      return (e?e.textContent+" ":"")+b+(withPlan&&o.dataset.plan?` (${o.dataset.plan})`:"");
+    });
+  }
+
+  // Dinner showdown
+  const restaurants=[
+    {e:"🌶️",n:"Siti",d:"Southeast Asian, in the Michelin Guide. East 11th.",u:"https://www.sitiatx.com/"},
+    {e:"🥩",n:"Restaurant François",d:"French-American splurge downtown. Tableside pasta, dry-aged steaks.",u:"https://www.restaurantfrancois.com"},
+    {e:"🦪",n:"Le Calamar",d:"French-Texan bistro on South 1st. Oysters and great martinis.",u:"https://guide.michelin.com/us/en/texas/austin_2958315/restaurant/le-calamar"},
+    {e:"🦐",n:"Este",d:"Mexican seafood on Manor Rd, from the Suerte team. On Esquire's best new restaurants list.",u:"https://www.esteatx.com/"},
+    {e:"🌴",n:"Canje",d:"Caribbean food on East 6th.",u:"https://canjeatx.com"},
+    {e:"🌆",n:"Nido",d:"Rooftop at The Loren, looking out over the lake and skyline.",u:"https://www.opentable.com/r/nido-austin"},
+    {e:"🍜",n:"Hermanas",d:"Mexican, Thai, and Lao cooking. East 6th.",u:"https://www.opentable.com/r/hermanas-austin"},
+    {e:"🍣",n:"Kappo Kappo",d:"Michelin-starred Japanese tasting menu at a small counter in the Austin Proper.",u:"https://guide.michelin.com/us/en/texas/austin_2958315/restaurant/kappo-kappo"},
+    {e:"🦆",n:"Odd Duck",d:"Farm-to-table small plates on South Lamar, from the Barley Swine team.",u:"https://www.oddduckaustin.com/"},
+    {e:"🎩",n:"Driskill Grill",d:"Newly renovated steakhouse led by April Bloomfield, in the historic Driskill Hotel.",u:"https://driskillhotel.com/dining/the-driskill-grill/"}
+  ];
+  let champ=0,challenger=1,dinnerWinner=null,skipDinner=false;
+  const link=r=>`<a href="${r.u}" target="_blank" rel="noopener">Check it out ↗</a>`;
+  const card=(r,isChamp,keep)=>`<div class="fighter ${isChamp?'champ':''}"><span class="e">${r.e}</span><div class="info">${isChamp?'<span class="crown">👑 Current pick</span>':''}<b>${r.n}</b><small>${r.d}</small>${link(r)}</div><button class="pick" onclick="vote(${keep})">Pick</button></div>`;
+  function renderShowdown(){
+    const el=document.getElementById('showdown');
+    if(skipDinner){el.innerHTML=`<div class="winner"><div class="e">🎁</div><h2>Tori picks</h2><p class="sub" style="margin:0">Surprise me.</p></div><button class="linkbtn" onclick="resetShowdown()">Actually, let me choose</button>`;return;}
+    if(dinnerWinner!==null){const r=restaurants[dinnerWinner];el.innerHTML=`<div class="winner"><div class="e">${r.e}🏆</div><h2>${r.n}</h2><p class="sub" style="margin:4px 0 8px">${r.d}</p>${link(r)}</div><button class="linkbtn" onclick="resetShowdown()">Start over</button>`;return;}
+    el.innerHTML=`<div class="round">Round ${challenger} of ${restaurants.length-1}</div>
+      ${card(restaurants[champ],challenger>1,true)}
+      <div class="vsline">VS</div>
+      ${card(restaurants[challenger],false,false)}
+      <button class="linkbtn" onclick="skipDinner=true;renderShowdown()">Can't decide? Let Tori pick</button>`;
+  }
+  function vote(keepChamp){if(!keepChamp)champ=challenger;challenger++;if(challenger>=restaurants.length){dinnerWinner=champ;confetti(15);}renderShowdown();}
+  function resetShowdown(){champ=0;challenger=1;dinnerWinner=null;skipDinner=false;renderShowdown();}
+  renderShowdown();
+
+  function show(n){
+    cur=n;steps.forEach((s,i)=>s.classList.toggle('active',i===n));
+    document.getElementById('bar').style.width=(n/(steps.length-1)*100)+'%';
+    document.getElementById('dayTag').textContent=steps[n].dataset.day;
+    if(n===steps.length-1){buildResults();confetti(40);}
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function next(){if(cur<steps.length-1)show(cur+1);}
+  function prev(){if(cur>0)show(cur-1);}
+
+  const val=id=>document.getElementById(id).value.trim();
+  function dinnerText(){if(skipDinner)return ["🎁 Tori picks"];if(dinnerWinner===null)return [];const r=restaurants[dinnerWinner];return [r.e+" "+r.n];}
+  function sections(withPlan){
+    return [
+      ["Friday dinner",picks('friIn')],
+      ["Friday vibe",picks('punch',withPlan)],
+      ["After dinner",picks('nightcap')],
+      ["Saturday ride",picks('bike')],
+      ["Lunch",picks('lunch')],
+      ["Nap",sl('nap')],
+      ["Birthday dinner",dinnerText()],
+      ["Rainey",sl('late')],
+      ["Sunday after class",picks('sunday')],
+      ["Treat yourself",picks('spa')],
+      ["Also want to do",val('other')?[val('other')]:[]],
+      ["Nick and Peter",val('guys')?[val('guys')]:[]]
+    ];
+  }
+  // The text sent to Tori includes the actual spots behind each vibe
+  function buildText(){
+    return "Madeline's Austin weekend picks 🎂\n\n"+sections(true).filter(s=>s[1].length).map(s=>`${s[0]}: ${s[1].join("; ")}`).join("\n");
+  }
+  const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+  function buildResults(){
+    document.getElementById('summary').innerHTML=sections(false).map(s=>`<h3>${s[0]}</h3>${s[1].length?s[1].map(esc).join("<br>"):"<i style='color:#8a7b98'>No preference</i>"}`).join("");
+    setStatus("");
+  }
+  function setStatus(t){document.getElementById('status').textContent=t;}
+  function fallbackCopy(t){const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy');}catch(e){}ta.remove();return ok;}
+  function copyText(t){
+    if(navigator.clipboard&&window.isSecureContext){return navigator.clipboard.writeText(t).then(()=>true).catch(()=>fallbackCopy(t));}
+    return Promise.resolve(fallbackCopy(t));
+  }
+  async function sendText(){
+    const t=buildText();
+    const ok=await copyText(t);
+    setStatus(ok?"Copied! If Messages doesn't open, paste it into a text to Tori.":"Tap \"Copy answers\" and paste them into a text to Tori.");
+    window.location.href=`sms:${TORI_PHONE}?&body=${encodeURIComponent(t)}`;
+  }
+  async function sendEmail(){
+    const t=buildText();
+    await copyText(t);
+    setStatus("If your email app doesn't open, your answers are copied. Paste them into an email to Tori.");
+    window.location.href=`mailto:${TORI_EMAIL}?subject=${encodeURIComponent("My Austin weekend picks 🎂")}&body=${encodeURIComponent(t)}`;
+  }
+  async function copyIt(){const ok=await copyText(buildText());setStatus(ok?"Copied! Paste it into a text to Tori.":"Copy didn't work. Try selecting the text above.");}
+
+  function confetti(n){
+    const bits=["🎉","🎂","🤠","✨","🌵","💛","🥂"];
+    for(let i=0;i<n;i++){const s=document.createElement('span');s.className='confetti';s.textContent=bits[Math.floor(Math.random()*bits.length)];s.style.left=Math.random()*100+'vw';s.style.animationDuration=(2+Math.random()*2.5)+'s';s.style.animationDelay=(Math.random()*.6)+'s';document.body.appendChild(s);setTimeout(()=>s.remove(),5500);}
+  }
+</script>
+</body>
+</html>
